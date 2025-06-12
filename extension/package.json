@@ -1,8 +1,7 @@
 {
   "name": "vite-web-extension",
   "version": "1.4.0",
-  "description": "A simple chrome & firefox extension template with Vite, React, TypeScript and Tailwind CSS.",
-  "license": "MIT",
+  "description": "A chrome plugin helps me organize my conversations in deeepseek.",
   "repository": {
     "type": "git",
     "url": "https://github.com/JohnBra/vite-web-extension.git"
