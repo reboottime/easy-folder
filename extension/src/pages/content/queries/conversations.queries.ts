@@ -16,13 +16,6 @@ export const conversationQueryKeys = {
   ]
 };
 
-export const prefetchConversations = (params?: { folderId?: string; bookmarked?: boolean }) => {
-  queryClient.prefetchQuery({
-    queryKey: conversationQueryKeys.conversationsByParams(params),
-    queryFn: () => conversationsService.findAll(params)
-  });
-};
-
 export const useGetConversations = (params?: { folderId?: string; bookmarked?: boolean }) => {
   return useQuery({
     queryKey: conversationQueryKeys.conversationsByParams(params),
