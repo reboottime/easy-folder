@@ -52,7 +52,6 @@ const Folders: React.FC = () => {
           >
             <Plus className="h-4 w-4 text-gray-600" />
           </button>
-          <span className="text-xs text-gray-500 ml-2">Always visible</span>
         </div>
 
         {isLoading && <p>Is Loading Folders...</p>}
