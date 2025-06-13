@@ -5,7 +5,7 @@ class PromptsService {
   private readonly endpoint: string = '/api/prompts';
   private httpClient: HttpClient;
 
-  constructor(baseUrl: string = '') {
+  constructor(baseUrl: string = 'http://localhost:3000') {
     this.baseUrl = baseUrl;
     this.httpClient = new HttpClient(`${this.baseUrl}${this.endpoint}`);
   }

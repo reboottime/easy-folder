@@ -4,7 +4,7 @@ class FoldersService {
     private readonly baseUrl: string;
     private httpClient: HttpClient;
 
-    constructor(baseUrl: string = '') {
+    constructor(baseUrl: string = 'http://localhost:3000') {
         this.baseUrl = baseUrl;
         this.httpClient = new HttpClient(`${this.baseUrl}/folders`);
     }
