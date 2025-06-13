@@ -15,7 +15,6 @@ export class Folder {
     maxlength: 100,
   })
   name: string;
-
 }
 
 export const FolderSchema = SchemaFactory.createForClass(Folder);
