@@ -12,15 +12,6 @@
 
 - /call callout my prompts saved for a project
 
+==> Visual Design
 
-===> visual design
-
-┌─ Search Bar ─────────────────┐ ← Primary action
-├─ Folders ───────────────────-┤ ← Always visible
-│  📁 Hello World              │
-│  📁 Hello                    │
-│  📁 AI Research              │
-├─ Prompts & Bookmarks ───────┤ ← Expandable sections
-│  ▷ 💬 Saved Prompts (5)     │ ← Click to expand panel
-│  ▷ ⭐ Bookmarks (12)        │ ← Click to expand panel
-└─────────────────────────────┘
+![alt text](image.png)
