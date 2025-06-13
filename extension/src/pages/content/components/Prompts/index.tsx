@@ -9,7 +9,7 @@ interface SavedPromptsProps {
   className?: string;
 }
 
-export const SavedPrompts: React.FC<SavedPromptsProps> = ({ className }) => {
+const SavedPrompts: React.FC<SavedPromptsProps> = ({ className }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState<IPrompt | null>(null);
@@ -109,3 +109,5 @@ export const SavedPrompts: React.FC<SavedPromptsProps> = ({ className }) => {
     </div>
   );
 };
+
+export default SavedPrompts;
