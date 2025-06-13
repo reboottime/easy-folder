@@ -9,7 +9,7 @@ import { useGetConversations } from "@pages/content/queries/conversations.querie
 import { Button } from "@ui/button";
 
 export default function Bookmarks() {
-    const [conversationId, setConversationId] = useState('');
+    const [conversationId, setConversationId] = useState("");
 
     const [bookmarksOpen, setBookmarksOpen] = useState(false);
     const { data } = useGetConversations({
@@ -17,19 +17,18 @@ export default function Bookmarks() {
     });
 
     const navigateToNewChat = useCallback(() => {
-        window.history.pushState({}, '', '/chat');
-        window.dispatchEvent(new PopStateEvent('popstate'));
+        window.location.href = "https://chat.deepseek.com/";
     }, []);
 
     useEffect(() => {
         const url = window.location.href;
         const match = url.match(/\/s\/([a-f0-9\-]{36})/i);
-        setConversationId(match ? match[1] : '');
-    }, [window.location])
+        setConversationId(match ? match[1] : "");
+    }, [window.location]);
 
     return (
-        <div>
-            <p className="flex justify-between">
+        <>
+            <div className="flex justify-between p-1 bg-white">
                 <Button
                     onClick={() => setBookmarksOpen(true)}
                     className="flex items-center gap-2"
@@ -40,11 +39,14 @@ export default function Bookmarks() {
                         <span className="bg-gray-200 px-2 py-1 rounded text-sm">12</span>
                     )}
                 </Button>
-                <Button onClick={navigateToNewChat}><MessageSquarePlus /> New Chat</Button>
-                {conversationId && <BookmarkButton conversationId={conversationId} />}
-            </p>
+
+                {conversationId && <>
+                    <BookmarkButton conversationId={conversationId} /><Button onClick={navigateToNewChat}>
+                        <MessageSquarePlus /> New
+                    </Button></>}
+            </div>
 
             <BookmarksCommand open={bookmarksOpen} onOpenChange={setBookmarksOpen} />
-        </div>
+        </>
     );
 }
