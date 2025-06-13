@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
+    "@tanstack/react-query": "^5.80.7",
+    "react-hook-form": "^7.57.0",
+    "yup": "^1.6.1"
+  }
+}

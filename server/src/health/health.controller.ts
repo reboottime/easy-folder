@@ -6,7 +6,7 @@ import {
   HttpHealthIndicator,
 } from '@nestjs/terminus';
 
-//A health check is a simple API endpoint that platforms like Render ping regularly to verify your app is working, 
+//A health check is a simple API endpoint that platforms like Render ping regularly to verify your app is working,
 //so they can automatically restart it or reroute traffic if it stops responding.
 
 @Controller('health')

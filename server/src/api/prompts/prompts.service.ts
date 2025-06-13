@@ -8,9 +8,7 @@ import { UpdatePromptDto } from './dto/update-prompt.dto';
 
 @Injectable()
 export class PromptsService {
-  constructor(
-    @InjectModel(Prompt.name) private promptModel: Model<Prompt>,
-  ) {}
+  constructor(@InjectModel(Prompt.name) private promptModel: Model<Prompt>) {}
 
   async create(createPromptDto: CreatePromptDto): Promise<Prompt> {
     const createdPrompt = new this.promptModel({
@@ -23,15 +21,13 @@ export class PromptsService {
 
   async findAll(folderId?: string): Promise<Prompt[]> {
     const filter = folderId ? { folderId } : {};
-    
+
     return this.promptModel
       .find(filter)
       .populate('folderId', 'name')
       .sort({ createdAt: -1 })
       .exec();
   }
-
-
 
   async update(id: string, updatePromptDto: UpdatePromptDto): Promise<Prompt> {
     const updatedPrompt = await this.promptModel

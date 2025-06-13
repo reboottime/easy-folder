@@ -8,7 +8,6 @@ import {
 } from 'class-validator';
 
 export class UpdatePromptDto {
- 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
@@ -16,7 +15,6 @@ export class UpdatePromptDto {
   @MaxLength(100)
   name?: string;
 
- 
   @IsOptional()
   @IsString()
   @IsNotEmpty()

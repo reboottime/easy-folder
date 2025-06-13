@@ -6,7 +6,6 @@ import {
   Delete,
   Body,
   Param,
-  Query,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -26,8 +25,7 @@ export class PromptsController {
   }
 
   @Get()
-  async findAll(
-  ): Promise<Prompt[]> {
+  async findAll(): Promise<Prompt[]> {
     return this.promptsService.findAll();
   }
 
