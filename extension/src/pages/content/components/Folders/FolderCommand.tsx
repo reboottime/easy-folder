@@ -22,8 +22,8 @@ export default function FolderCommand({ folder }: FolderCommandProps) {
     });
 
     const onConversationSelect = (conversation: IConversation) => {
-        // Add your conversation selection logic here
-        console.log("Selected conversation:", conversation);
+        window.history.pushState({}, '', `/chat/a/${conversation.conversationId}`);
+        window.dispatchEvent(new PopStateEvent('popstate'));
     };
 
     return (

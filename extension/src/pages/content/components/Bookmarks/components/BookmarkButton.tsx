@@ -29,7 +29,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       onClick={handleBookmarkToggle}
       disabled={updateConversation.isPending}
       className={`bookmark-btn ${className} ${isBookmarked ? 'bookmarked' : ''}`}
-      title={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+      title={isBookmarked ? 'Remove bookmark' : 'bookmark conversation'}
     >
       {updateConversation.isPending ? (
         <span>⏳</span>
