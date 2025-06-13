@@ -22,7 +22,7 @@
       "@locales/*": ["src/locales/*"],
       "@pages/*": ["src/pages/*"],
       "@utils/*": ["src/utils/*"],
-      "@ui/*": ["src/uis/*"]
+      "@ui/*": ["src/ui/*"]
     }
   },
   "include": [

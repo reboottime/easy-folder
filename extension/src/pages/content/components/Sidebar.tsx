@@ -1,4 +1,4 @@
 
-export function Sidebar() {
+export default function Sidebar() {
     return null;
 }

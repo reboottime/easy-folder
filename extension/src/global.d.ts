@@ -13,10 +13,12 @@ declare module '*.json' {
 
 // folders
 declare interface IFolder {
-  _id?: string;
+  _id: string;
   name: string;
   createdAt?: Date;
   updatedAt?: Date;
+  icon?: string;
+  color?: string;
 }
 
 declare interface ICreateFolderDto {

@@ -1,6 +1,6 @@
 import HttpClient from "./http-client";
 
-export default class ConversationsService {
+ class ConversationsService {
     private readonly baseUrl: string;
     private readonly endpoint: string = '/api/conversations';
     private httpClient: HttpClient;
@@ -38,3 +38,7 @@ export default class ConversationsService {
         await this.httpClient.delete(`/${conversationId}`);
     }
 }
+
+const conversationsUtil = new ConversationsService();
+
+export default conversationsUtil;

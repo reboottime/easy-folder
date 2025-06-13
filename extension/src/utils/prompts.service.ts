@@ -1,6 +1,6 @@
 import HttpClient from "./http-client";
 
-export default class PromptsService {
+class PromptsService {
   private readonly baseUrl: string;
   private readonly endpoint: string = '/api/prompts';
   private httpClient: HttpClient;
@@ -14,7 +14,7 @@ export default class PromptsService {
     return this.httpClient.post('', createPromptDto);
   }
 
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<IPrompt[]> {
     return this.httpClient.get('');
   }
 
@@ -26,3 +26,7 @@ export default class PromptsService {
     await this.httpClient.delete(`/${id}`);
   }
 }
+
+const propmtsService = new PromptsService();
+
+export default propmtsService

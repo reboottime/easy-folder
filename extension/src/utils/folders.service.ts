@@ -1,6 +1,6 @@
 import HttpClient from "./http-client";
 
-export default class FoldersService {
+class FoldersService {
     private readonly baseUrl: string;
     private httpClient: HttpClient;
 
@@ -9,15 +9,15 @@ export default class FoldersService {
         this.httpClient = new HttpClient(`${this.baseUrl}/folders`);
     }
 
-    async create(createFolderDto: any): Promise<any> {
+    async create(createFolderDto: any): Promise<IFolder> {
         return this.httpClient.post('/', createFolderDto);
     }
 
-    async findAll(): Promise<{ folders: any[] }> {
+    async findAll(): Promise<{ folders: IFolder[] }> {
         return this.httpClient.get('');
     }
 
-    async update(id: string, updateFolderDto: any): Promise<any> {
+    async update(id: string, updateFolderDto: any): Promise<IFolder> {
         return this.httpClient.put(`/${id}`, updateFolderDto);
     }
 
@@ -25,3 +25,7 @@ export default class FoldersService {
         await this.httpClient.delete(`/${id}`);
     }
 }
+
+const folders = new FoldersService();
+
+export default folders;
