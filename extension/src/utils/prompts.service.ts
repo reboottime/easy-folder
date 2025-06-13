@@ -10,23 +10,23 @@ class PromptsService {
     this.httpClient = new HttpClient(`${this.baseUrl}${this.endpoint}`);
   }
 
-  async create(createPromptDto: any): Promise<IPrompt> {
+  create = async (createPromptDto: any): Promise<IPrompt> => {
     return this.httpClient.post('', createPromptDto);
   }
 
-  async findAll(): Promise<IPrompt[]> {
+  findAll = async (): Promise<IPrompt[]> => {
     return this.httpClient.get('');
   }
 
-  async update(id: string, updatePromptDto: any): Promise<IPrompt> {
+  update = async (id: string, updatePromptDto: any): Promise<IPrompt> => {
     return this.httpClient.put(`/${id}`, updatePromptDto);
   }
 
-  async remove(id: string): Promise<void> {
+  remove = async (id: string): Promise<void> => {
     await this.httpClient.delete(`/${id}`);
   }
 }
 
-const propmtsService = new PromptsService();
+const promptsService = new PromptsService(); // Fixed the typo here too
 
-export default propmtsService
+export default promptsService;

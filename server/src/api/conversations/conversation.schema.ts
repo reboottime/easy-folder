@@ -31,9 +31,10 @@ export class Conversation {
   folderId?: Types.ObjectId; // Optional reference to folder
 
   @Prop({
-    default: false,
+    required: false,
+    default: null,
   })
-  bookmarked: boolean;
+  note: string;
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

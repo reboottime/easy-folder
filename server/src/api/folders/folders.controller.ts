@@ -23,7 +23,7 @@ export class FoldersController {
   }
 
   @Get()
-  async findAll(): Promise<{ folders: Folder[] }> {
+  async findAll(): Promise<Folder[]> {
     return this.foldersService.findAll();
   }
 

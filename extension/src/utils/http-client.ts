@@ -73,9 +73,10 @@ export default class HttpClient {
 
         if (contentType.includes('application/json')) {
             try {
-                return await response.json();
+                const res =  await response.json();
+                return res.data;
             } catch (error) {
-                throw new Error(`Failed to parse JSON response: ${error.message}`);
+                throw new Error(`Failed to parse JSON response: ${(error as Error).message}`);
             }
         }
 

@@ -15,6 +15,7 @@ declare module '*.json' {
 declare interface IFolder {
   _id: string;
   name: string;
+  description?: string;
   createdAt?: Date;
   updatedAt?: Date;
   icon?: string;
@@ -23,10 +24,12 @@ declare interface IFolder {
 
 declare interface ICreateFolderDto {
   name: string;
+  description?: string;
 }
 
 declare interface IUpdateFolderDto {
   name?: string;
+  description?: string;
 }
 
 // conversations
@@ -35,7 +38,7 @@ declare interface IConversation {
   conversationId: string;
   title: string;
   folderId?: string | null;
-  bookmarked: boolean;
+  note?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -43,14 +46,14 @@ declare interface IConversation {
 declare interface ICreateConversationDto {
   conversationId: string;
   title: string;
-  folderId?: string;
-  bookmarked?: boolean;
+  folderId: string | null;
+  note?: string;
 }
 
 declare interface IUpdateConversationDto {
   title?: string;
   folderId?: string | null;
-  bookmarked?: boolean;
+  note?: string;
 }
 
 declare interface IConversationWithFolder extends Omit<IConversation, 'folderId'> {

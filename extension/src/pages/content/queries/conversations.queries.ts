@@ -19,24 +19,21 @@ export const conversationQueryKeys = {
 export const useGetConversations = (params?: { folderId?: string; bookmarked?: boolean }) => {
   return useQuery({
     queryKey: conversationQueryKeys.conversationsByParams(params),
-    queryFn: () => conversationsService.findAll(params)
+    queryFn: () => conversationsService.findAll(params),
   });
 };
 
 export const useUpdateConversation = () => {
   return useMutation({
-    mutationFn: ({ conversationId, updateConversationDto }: { 
+    mutationFn: ({ conversationId, update }: { 
       conversationId: string; 
-      updateConversationDto: any 
-    }) => conversationsService.update(conversationId, updateConversationDto),
+      update: IUpdateConversationDto 
+    }) => conversationsService.update(conversationId, update),
     onSuccess: (updatedConversation, variables) => {
-      // Update specific conversation in cache
       queryClient.setQueryData(
         conversationQueryKeys.conversation(variables.conversationId),
         updatedConversation
       );
-      
-      // Invalidate all conversation lists to reflect changes
       queryClient.invalidateQueries({
         queryKey: conversationQueryKeys.conversations
       });
@@ -49,12 +46,9 @@ export const useDeleteConversation = () => {
   return useMutation({
     mutationFn: (conversationId: string) => conversationsService.remove(conversationId),
     onSuccess: (_, deletedId) => {
-      // Remove from cache
       queryClient.removeQueries({
         queryKey: conversationQueryKeys.conversation(deletedId)
       });
-      
-      // Invalidate all conversation lists
       queryClient.invalidateQueries({
         queryKey: conversationQueryKeys.conversations
       });
@@ -63,48 +57,12 @@ export const useDeleteConversation = () => {
   });
 };
 
-export const useDeleteConversationOptimistic = () => {
+export const useCreateConversation = () => {
   return useMutation({
-    mutationFn: (conversationId: string) => conversationsService.remove(conversationId),
-    onMutate: async (deletedId) => {
-      // Cancel outgoing refetches
-      await queryClient.cancelQueries({ 
-        queryKey: conversationQueryKeys.conversations 
-      });
-      
-      // Snapshot previous values for all conversation queries
-      const previousQueries = queryClient.getQueriesData({ 
-        queryKey: conversationQueryKeys.conversations 
-      });
-      
-      // Optimistically update all conversation lists
-      queryClient.getQueriesData({ 
-        queryKey: conversationQueryKeys.conversations 
-      }).forEach(([queryKey, data]) => {
-        if (data && typeof data === 'object' && 'conversations' in data) {
-          queryClient.setQueryData(queryKey, {
-            ...data,
-            conversations: (data as any).conversations.filter(
-              (conv: IConversation) => conv._id !== deletedId
-            )
-          });
-        }
-      });
-      
-      return { previousQueries };
-    },
-    onError: (err, deletedId, context) => {
-      // Rollback on error
-      if (context?.previousQueries) {
-        context.previousQueries.forEach(([queryKey, data]) => {
-          queryClient.setQueryData(queryKey, data);
-        });
-      }
-    },
-    onSettled: () => {
-      // Always refetch after error or success
-      queryClient.invalidateQueries({ 
-        queryKey: conversationQueryKeys.conversations 
+    mutationFn: (createFolderDto: ICreateConversationDto) => conversationsService.create(createFolderDto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: conversationQueryKeys.conversations
       });
     },
     retry: 1

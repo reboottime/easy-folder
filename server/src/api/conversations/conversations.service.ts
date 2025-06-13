@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Conversation } from './conversation.schema';
 import { UpdateConversationDto } from './dto/update-conversation.dto';
+import { CreateConversationDto } from './dto/create-conversation.dto';
 
 @Injectable()
 export class ConversationsService {
@@ -12,17 +17,39 @@ export class ConversationsService {
     private conversationModel: Model<Conversation>,
   ) {}
 
-  async findByFolder(folderId: string): Promise<Conversation[]> {
-    return this.conversationModel
-      .find({ folderId })
-      .populate('folderId', 'name')
-      .sort({ lastAccessed: -1 })
+  async create(createConDto: CreateConversationDto): Promise<Conversation> {
+    // Check if folder name already exists
+    const existing = await this.conversationModel
+      .findOne({ conversationId: createConDto.conversationId })
       .exec();
+
+    if (existing) {
+      throw new BadRequestException(
+        'Conversation with this name already exists',
+      );
+    }
+
+    const conversation = new this.conversationModel(createConDto);
+
+    return conversation.save();
   }
 
-  async findBookmarked(): Promise<Conversation[]> {
+  async findConversations(params?: {
+    folderId?: string;
+    bookmarked?: boolean;
+  }): Promise<Conversation[]> {
+    const query: any = {};
+
+    if (params?.folderId) {
+      query.folderId = params.folderId;
+    }
+
+    if (params?.bookmarked !== undefined) {
+      query.bookmarked = params.bookmarked;
+    }
+
     return this.conversationModel
-      .find({ bookmarked: true })
+      .find(query)
       .populate('folderId', 'name')
       .sort({ lastAccessed: -1 })
       .exec();
@@ -37,7 +64,6 @@ export class ConversationsService {
         { conversationId },
         {
           ...updateConversationDto,
-          lastAccessed: new Date(),
         },
         { new: true, upsert: true },
       )

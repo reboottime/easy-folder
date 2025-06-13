@@ -15,6 +15,13 @@ export class Folder {
     maxlength: 100,
   })
   name: string;
+
+  @Prop({
+    required: false,
+    trim: true,
+    maxlength: 100,
+  })
+  descritpion: string;
 }
 
 export const FolderSchema = SchemaFactory.createForClass(Folder);
