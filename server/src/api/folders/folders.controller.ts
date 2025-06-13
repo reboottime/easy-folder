@@ -36,10 +36,7 @@ export class FoldersController {
   }
 
   @Delete(':id')
-  async delete(
-    @Param('id') id: string,
-    @Body() updateFolderDto: UpdateFolderDto,
-  ): Promise<void> {
+  async delete(@Param('id') id: string): Promise<void> {
     return this.foldersService.remove(id);
   }
 }
