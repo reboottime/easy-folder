@@ -16,7 +16,7 @@ import { CreatePromptDto } from './dto/create-prompt.dto';
 import { UpdatePromptDto } from './dto/update-prompt.dto';
 import { Prompt } from './prompt.schema';
 
-@Controller('prompts')
+@Controller('api/prompts')
 export class PromptsController {
   constructor(private readonly promptsService: PromptsService) {}
 
