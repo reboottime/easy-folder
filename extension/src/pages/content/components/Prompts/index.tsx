@@ -1,97 +1,120 @@
 import React, { useState } from 'react';
-import { ChevronRight, ChevronDown, Plus } from 'lucide-react';
+import { Plus, FileText, Search, Edit3 } from 'lucide-react';
 import { Button } from '@ui/button';
-import { useGetPrompts } from '@pages/content/queries/prompts.queries';
 
+import { useGetPrompts } from '@pages/content/queries/prompts.queries';
 import { PromptDialog } from './components/PromptDialog';
+
+import { cn } from '@utils/cn';
+import { ScrollArea } from '@ui/scrollarea';
 
 interface SavedPromptsProps {
   className?: string;
 }
 
 const SavedPrompts: React.FC<SavedPromptsProps> = ({ className }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showAddDialog, setShowAddDialog] = useState(false);
+  const { data: prompts, isLoading, error } = useGetPrompts();
+  const [search, setSearch] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState<IPrompt | null>(null);
+
+  const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
-
-  // Assuming you have a hook to fetch prompts
-  const { data: prompts = [], isLoading } = useGetPrompts();
-
-  const handleToggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const handlePromptClick = (prompt: IPrompt) => {
-    setSelectedPrompt(prompt);
-    setShowEditDialog(true);
-  };
-
-  const promptCount = prompts?.length ?? 0;
 
   return (
     <div className={className}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-md cursor-pointer group">
-        <div className="flex items-center gap-2 flex-1" onClick={handleToggleExpanded}>
-          <div className="flex items-center gap-1">
-            {isExpanded ? (
-              <ChevronDown className="w-4 h-4 text-gray-500" />
-            ) : (
-              <ChevronRight className="w-4 h-4 text-gray-500" />
-            )}
-            <div className="w-5 h-5 bg-purple-500 rounded flex items-center justify-center">
-              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </div>
+      <div className="bg-white rounded-lg border border-gray-200 p-4 max-w-md space-y-4">
+        {/* Header with Prompts title and + button */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-medium text-gray-900">Prompts</h2>
+          <div className="flex gap-4">
+            <Button
+              onClick={setShowAddDialog.bind(null, true)}
+              variant={"secondary"}
+              aria-label="Add Prompt"
+              size="icon"
+            >
+              <Plus className="h-4 w-4 text-gray-600" />
+            </Button>
           </div>
-          <span className="text-sm font-medium text-gray-700">Saved Prompts</span>
-          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
-            {promptCount}
-          </span>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="opacity-0 group-hover:opacity-100 transition-opacity p-2 h-6 w-6"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowAddDialog(true);
-          }}
-        >
-          <Plus className="w-3 h-3" />
-        </Button>
-      </div>
 
-      {/* Expanded Content */}
-      {isExpanded && (
-        <div className="pl-6 space-y-1">
-          {isLoading ? (
-            <div className="text-xs text-gray-500 py-2">Loading prompts...</div>
-          ) : promptCount === 0 ? (
-            <div className="text-xs text-gray-500 py-2">No saved prompts</div>
-          ) : (
-            prompts.map((prompt) => (
+        {/* Search Box */}
+        <div className="relative mb-4">
+          <input
+            type="text"
+            placeholder="Search prompts..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && search) {
+                setIsSearching(true);
+              }
+            }}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+        </div>
+
+        {isLoading && <p>Loading Prompts...</p>}
+        {error && <p>Failed to load prompts: {error.message}</p>}
+
+        {/* Prompts List */}
+        <ScrollArea className={cn('max-h-[240px]')}>
+          <div
+            className={cn({
+              "space-y-1": prompts?.length,
+            })}
+          >
+            {prompts?.map((prompt) => (
               <div
                 key={prompt._id}
-                className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-md cursor-pointer group"
-                onClick={() => handlePromptClick(prompt)}
+                className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors w-full border border-gray-100"
               >
-                <div className="w-4 h-4 bg-purple-100 rounded flex items-center justify-center flex-shrink-0">
-                  <svg className="w-2.5 h-2.5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 102 0V3h6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" />
-                  </svg>
+                <div className="flex items-center space-x-3 flex-1">
+                  <div className="w-8 h-8 rounded-md flex items-center justify-center bg-blue-100">
+                    <FileText className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-gray-900 font-medium block truncate">
+                      {prompt.name}
+                    </span>
+                    <span className="text-gray-500 text-sm block truncate">
+                      {prompt.content}
+                    </span>
+                  </div>
                 </div>
-                <span className="text-sm text-gray-700 truncate flex-1">
-                  {prompt.name}
-                </span>
+                <div className="flex gap-1">
+                  <Button
+                    onClick={() => setSelectedPrompt(prompt)}
+                    variant="ghost"
+                    size="sm"
+                    aria-label="Edit Prompt"
+                  >
+                    <Edit3 className="h-3 w-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label="Use Prompt"
+                  >
+                    Use
+                  </Button>
+                </div>
               </div>
-            ))
-          )}
-        </div>
-      )}
+            ))}
+
+          </div>
+        </ScrollArea>
+        {prompts && prompts.length === 0 && (
+          <Button
+            className="cursor-pointer w-full"
+            onClick={setShowAddDialog.bind(null, true)}
+          >
+            <Plus /> Add Prompt
+          </Button>
+        )}
+      </div>
 
       <PromptDialog
         open={showAddDialog}
@@ -100,9 +123,9 @@ const SavedPrompts: React.FC<SavedPromptsProps> = ({ className }) => {
 
       <PromptDialog
         open={showEditDialog}
-        onOpenChange={(val:boolean) => {
-            setShowEditDialog(val);
-            setSelectedPrompt(null);
+        onOpenChange={(val: boolean) => {
+          setShowEditDialog(val);
+          setSelectedPrompt(null);
         }}
         prompt={selectedPrompt}
       />

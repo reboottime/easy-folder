@@ -1,3 +1,4 @@
+import { useCallback, } from "react";
 import {
     CommandDialog,
     CommandEmpty,
@@ -8,27 +9,28 @@ import {
 } from "@ui/command";
 import { useGetConversations } from "@pages/content/queries/conversations.queries";
 
-interface FolderCommandProps {
-    folder: IFolder;
+
+interface ConversationsCommandProps {
+    open: boolean, onOpenChange: (val: boolean) => void;
+    search: string;
 }
 
-export default function FolderCommand({ folder }: FolderCommandProps) {
+export default function ConversationsCommand({ open, onOpenChange }: ConversationsCommandProps) {
     const {
-        data,
+        data: conversations,
         isLoading,
-        error
-    } = useGetConversations({
-        folderId: folder._id
-    });
+        error,
+    } = useGetConversations();
 
-    const onConversationSelect = (conversation: IConversation) => {
-        window.history.pushState({}, '', `/chat/a/${conversation.conversationId}`);
-        window.dispatchEvent(new PopStateEvent('popstate'));
-    };
+    const onConversationSelect = useCallback((conversation: IConversation) => {
+        window.history.pushState({}, "", `/chat/a/${conversation.conversationId}`);
+        window.dispatchEvent(new PopStateEvent("popstate"));
+    }, []);
+
 
     return (
-        <CommandDialog open={!!folder}>
-            <CommandInput placeholder="Search conversations..." />
+        <CommandDialog open={open} onOpenChange={onOpenChange}>
+            <CommandInput placeholder={`Search conversations ...`} />
             <CommandList>
                 {isLoading && (
                     <CommandGroup>
@@ -44,13 +46,13 @@ export default function FolderCommand({ folder }: FolderCommandProps) {
                     </CommandGroup>
                 )}
 
-                {!isLoading && !error && data?.conversations.length === 0 && (
-                    <CommandEmpty>No conversations found in this folder.</CommandEmpty>
+                {!isLoading && !error && conversations?.length === 0 && (
+                    <CommandEmpty>No conversations found.</CommandEmpty>
                 )}
 
-                {(data?.conversations?.length ?? 0) > 0 && (
+                {(conversations?.length ?? 0) > 0 && (
                     <CommandGroup heading="Conversations">
-                        {data?.conversations.map((conversation) => (
+                        {conversations?.map((conversation) => (
                             <CommandItem
                                 key={conversation._id}
                                 onSelect={() => onConversationSelect(conversation)}

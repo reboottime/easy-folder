@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsOptional, IsMongoId } from 'class-validator';
+import { IsString, IsOptional, IsMongoId } from 'class-validator';
 
 export class UpdateConversationDto {
   @IsOptional()
@@ -7,6 +7,10 @@ export class UpdateConversationDto {
   folderId?: string;
 
   @IsOptional()
-  @IsBoolean()
-  bookmarked?: boolean;
+  @IsString()
+  note?: string;
+
+  @IsOptional()
+  @IsString()
+  title?: string;
 }

@@ -8,32 +8,34 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  Post,
 } from '@nestjs/common';
 
 import { ConversationsService } from './conversations.service';
 import { UpdateConversationDto } from './dto/update-conversation.dto';
 import { Conversation } from './conversation.schema';
+import { CreateConversationDto } from './dto/create-conversation.dto';
 
 @Controller('api/conversations')
 export class ConversationsController {
   constructor(private readonly conversationsService: ConversationsService) {}
 
+  @Post()
+  async create(
+    @Body() createConDto: CreateConversationDto,
+  ): Promise<Conversation> {
+    return this.conversationsService.create(createConDto);
+  }
+
   @Get()
   async findAll(
     @Query('folderId') folderId?: string,
     @Query('bookmarked') bookmarked?: string,
-  ): Promise<{ conversations: Conversation[] } | Conversation[]> {
-    if (bookmarked === 'true') {
-      const conversations = await this.conversationsService.findBookmarked();
-      return conversations;
-    } else if (folderId) {
-      const conversations = await this.conversationsService.findByFolder(
-        folderId,
-      );
-      return conversations;
-    } else {
-      throw new Error('Invalid query parameters');
-    }
+  ): Promise<Conversation[]> {
+    return this.conversationsService.findConversations({
+      folderId,
+      bookmarked: bookmarked === 'true' ? true : undefined,
+    });
   }
 
   @Put(':conversationId')

@@ -1,12 +1,20 @@
-import { IsString, IsBoolean, IsOptional, IsMongoId } from 'class-validator';
+import { IsString, IsOptional, IsMongoId, IsUUID } from 'class-validator';
 
-export class UpdateConversationDto {
+export class CreateConversationDto {
   @IsOptional()
   @IsString()
   @IsMongoId()
   folderId?: string;
 
+  @IsString()
+  @IsUUID()
+  conversationId: string;
+
   @IsOptional()
-  @IsBoolean()
-  bookmarked?: boolean;
+  @IsString()
+  note?: string;
+
+  @IsOptional()
+  @IsString()
+  title: string;
 }

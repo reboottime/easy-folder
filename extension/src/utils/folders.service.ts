@@ -4,28 +4,28 @@ class FoldersService {
     private readonly baseUrl: string;
     private httpClient: HttpClient;
 
-    constructor(baseUrl: string = 'http://localhost:3000') {
+    constructor(baseUrl: string) {
         this.baseUrl = baseUrl;
         this.httpClient = new HttpClient(`${this.baseUrl}/folders`);
     }
 
-    async create(createFolderDto: any): Promise<IFolder> {
+    create = async (createFolderDto: ICreateFolderDto): Promise<IFolder> => {
         return this.httpClient.post('/', createFolderDto);
-    }
+    };
 
-    async findAll(): Promise<{ folders: IFolder[] }> {
+    findAll = async (): Promise<IFolder[]> => {
         return this.httpClient.get('');
-    }
+    };
 
-    async update(id: string, updateFolderDto: any): Promise<IFolder> {
+    update = async (id: string, updateFolderDto: IUpdateFolderDto): Promise<IFolder> => {
         return this.httpClient.put(`/${id}`, updateFolderDto);
-    }
+    };
 
-    async delete(id: string): Promise<void> {
+    delete = async (id: string): Promise<void> => {
         await this.httpClient.delete(`/${id}`);
-    }
+    };
 }
 
-const folders = new FoldersService();
+const folders = new FoldersService('http://localhost:3000/api');
 
 export default folders;

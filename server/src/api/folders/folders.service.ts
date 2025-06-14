@@ -33,13 +33,8 @@ export class FoldersService {
     return createdFolder.save();
   }
 
-  async findAll(): Promise<{ folders: Folder[] }> {
-    const folders = await this.folderModel
-      .find()
-      .sort({ createdAt: -1 })
-      .exec();
-
-    return { folders };
+  async findAll(): Promise<Folder[]> {
+    return await this.folderModel.find().sort({ createdAt: -1 }).exec();
   }
 
   async findOne(id: string): Promise<Folder> {
