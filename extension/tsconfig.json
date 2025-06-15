@@ -22,7 +22,16 @@
       "@locales/*": ["src/locales/*"],
       "@pages/*": ["src/pages/*"],
       "@utils/*": ["src/utils/*"],
-      "@ui/*": ["src/ui/*"]
+      "@ui/*": ["src/ui/*"],
+
+      // for pages
+      "@background/*": ["src/pages/background/*"],
+      "@content/*": ["src/pages/content/*"],
+      "@devtools/*": ["src/pages/devtools/*"],
+      "@newtab/*": ["src/pages/newtab/*"],
+      "@options/*": ["src/pages/options/*"],
+      "@panel/*": ["src/pages/panel/*"],
+      "@popup/*": ["src/pages/popup/*"]
     }
   },
   "include": [

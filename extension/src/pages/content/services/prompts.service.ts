@@ -1,11 +1,11 @@
-import HttpClient from "./http-client";
+import HttpClient from "@utils/http-client";
 
 class PromptsService {
   private readonly baseUrl: string;
-  private readonly endpoint: string = '/api/prompts';
+  private readonly endpoint: string = '/prompts';
   private httpClient: HttpClient;
 
-  constructor(baseUrl: string = 'http://localhost:3000') {
+  constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
     this.httpClient = new HttpClient(`${this.baseUrl}${this.endpoint}`);
   }
@@ -27,6 +27,6 @@ class PromptsService {
   }
 }
 
-const promptsService = new PromptsService(); // Fixed the typo here too
+const promptsService = new PromptsService(`https://deepseek-helper.onrender.com/api`); // Fixed the typo here too
 
 export default promptsService;

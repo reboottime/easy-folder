@@ -2,7 +2,7 @@ import { Bookmark } from "lucide-react";
 
 import { Button } from "@ui/button";
 import { cn } from "@utils/cn";
-import { useDeleteConversation } from "@pages/content/queries/conversations.queries";
+import { useDeleteConversation } from "@content/queries/conversations.queries";
 
 interface BookmarkConversationProps {
   conversationId: IConversation["conversationId"];

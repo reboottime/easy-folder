@@ -23,8 +23,8 @@ import { Textarea } from "@ui/textarea";
 import {
     useCreateConversation,
     useUpdateConversation,
-} from "@pages/content/queries/conversations.queries";
-import { useGetFolders } from "@pages/content/queries/folders.queries";
+} from "@content/queries/conversations.queries";
+import { useGetFolders } from "@content/queries/folders.queries";
 
 type ConversationFormData = {
     folderId: string | null;

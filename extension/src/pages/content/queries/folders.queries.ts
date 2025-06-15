@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import queryClient from '@src/pages/content/queryClient';
-import foldersService from '@utils/folders.service';
+import queryClient from '@content/queryClient';
+import foldersService from '@content/services/folders.service';
 
 export const folderQueryKeys = {
   folders: ['folders'],

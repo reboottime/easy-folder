@@ -9,7 +9,7 @@ import {
     CommandItem,
     CommandList,
 } from "@ui/command";
-import { useGetPrompts } from "@pages/content/queries/prompts.queries";
+import { useGetPrompts } from "@content/queries/prompts.queries";
 
 interface SearchPromptProps {
     onApplyPrompt: (prompt: IPrompt) => void;

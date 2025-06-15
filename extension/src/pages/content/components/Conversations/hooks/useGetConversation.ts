@@ -4,10 +4,10 @@ import useGetConversationRawData from "./useGetConversationRawData";
 
 export default function useGetConversation() {
     const { conversationId, title } = useGetConversationRawData();
-    const { data: conversations, ...rest } = useGetConversations();
+    const { data: conversations, isFetched, ...rest } = useGetConversations();
 
     const conversation = useMemo(() => {
-        if (!conversationId) return null;
+        if (!conversationId || !isFetched) return null;
 
         return (
             conversations?.find((item) => item.conversationId === conversationId) ?? {
@@ -17,8 +17,8 @@ export default function useGetConversation() {
                 folderId: null,
             }
         );
-    }, [conversationId, title, conversations]);
+    }, [conversationId, title, conversations, isFetched]);
 
 
-    return { ...rest, data: conversation };
+    return { ...rest, data: conversation, isFetched };
 }

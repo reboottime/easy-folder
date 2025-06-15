@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Search, Plus, MessageSquarePlus } from "lucide-react";
 
-import { useGetFolders } from "@pages/content/queries/folders.queries";
+import { useGetFolders } from "@content/queries/folders.queries";
 import { Button } from "@ui/button";
 import { cn } from "@utils/cn";
 
@@ -10,7 +10,7 @@ import BookmarkConversation from "./BookmarkButton";
 import ConversationsCommand from "./ConversationsCommand";
 import EditConversation from "./EditConversationDialog";
 import FolderCommand from "./FolderCommand";
-import UnBookmarkButton from "./UnbookmarkButton";
+import UnBookmarkButton from "./UnBookmarkButton";
 import useGetConversation from "./hooks/useGetConversation";
 
 const Conversations: React.FC = () => {
@@ -25,6 +25,8 @@ const Conversations: React.FC = () => {
   }, []);
 
   const { data: conversation } = useGetConversation();
+  const isInDb = conversation && '_id' in conversation;
+  const isNotInDb = conversation && !('_id' in conversation);
 
   return (
     <>
@@ -33,17 +35,17 @@ const Conversations: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium text-gray-900">Conversations</h2>
           <div className="flex gap-4">
-            {conversation?.conversationId && !conversation?._id && (
+            {!isNotInDb && (
               <>
-                <BookmarkConversation conversation={conversation} />{" "}
+                <BookmarkConversation conversation={conversation as ICreateConversationDto} />{" "}
               </>
             )}
-            {conversation?._id && (
+            {isInDb && (
               <>
                 <UnBookmarkButton
                   conversationId={conversation.conversationId}
                 />
-                <EditConversation conversation={conversation} />
+                <EditConversation conversation={conversation as IConversation} />
               </>
             )}
             <Button

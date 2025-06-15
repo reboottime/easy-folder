@@ -5,7 +5,7 @@ import { Button } from "@ui/button";
 import { ScrollArea } from "@ui/scrollarea";
 import { cn } from "@utils/cn";
 
-import { useGetPrompts } from "@pages/content/queries/prompts.queries";
+import { useGetPrompts } from "@content/queries/prompts.queries";
 
 import applyPrompt from "./utils/applyPrompt";
 import PromptDialog from "./components/PromptDialog";

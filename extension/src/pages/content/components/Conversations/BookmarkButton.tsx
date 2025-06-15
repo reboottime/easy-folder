@@ -15,7 +15,7 @@ import { cn } from "@utils/cn";
 import { ConversationForm } from "./ConversationForm";
 
 interface BookmarkConversationProps {
-  conversation: IConversation;
+  conversation: ICreateConversationDto;
 }
 
 export default function BookmarkConversation({
