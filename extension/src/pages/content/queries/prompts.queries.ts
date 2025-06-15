@@ -32,10 +32,9 @@ export const useCreatePrompt = () => {
 
 export const useUpdatePrompt = () => {
   return useMutation({
-    mutationFn: ({ id, updatePromptDto }: { id: string; updatePromptDto: any }) =>
-      promptsService.update(id, updatePromptDto),
+    mutationFn: ({ id, update }: { id: string; update: IUpdatePromptDto }) =>
+      promptsService.update(id, update),
     onSuccess: (updatedPrompt, variables) => {
-      // Update specific prompt in cache
       queryClient.setQueryData(
         promptQueryKeys.prompt(variables.id),
         updatedPrompt

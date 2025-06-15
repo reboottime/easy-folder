@@ -78,7 +78,7 @@ const Conversations: React.FC = () => {
                             <div className="flex items-center space-x-3">
                                 <div
                                     className="w-8 h-8 rounded-md flex items-center justify-center text-white font-medium"
-                                    style={{ backgroundColor: folder.color || "#6B7280" }}
+                                    style={{ backgroundColor: folder.color || "#DBEAFE" }}
                                 >
                                     {folder.icon || "📁"}
                                 </div>
@@ -86,14 +86,6 @@ const Conversations: React.FC = () => {
                             </div>
                         </button>
                     ))}
-                    {folders && folders.length === 0 && (
-                        <Button
-                            className="cursor-pointer w-full"
-                            onClick={setIsAddingFolder.bind(null, true)}
-                        >
-                            <Plus /> Add Folder
-                        </Button>
-                    )}
                     <Button
                         className="cursor-pointer w-full"
                         onClick={setIsAddingFolder.bind(null, true)}

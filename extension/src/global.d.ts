@@ -79,7 +79,7 @@ declare interface ICreatePromptDto {
 declare interface IUpdatePromptDto {
   name?: string;
   content?: string;
-  folderId?: string | null;
+  folderId?: string;
 }
 
 declare interface IPromptWithFolder extends Omit<IPrompt, 'folderId'> {
