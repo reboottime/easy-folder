@@ -12,7 +12,7 @@ import {
 } from "@ui/dialog";
 import { Input } from "@ui/input";
 import { Label } from "@ui/label";
-import { useCreateFolder } from "@pages/content/queries/folders.queries";
+import { useCreateFolder } from "@content/queries/folders.queries";
 
 interface AddFolderDialogProps {
     trigger?: React.ReactNode;

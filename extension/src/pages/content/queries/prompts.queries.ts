@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import queryClient from '@src/pages/content/queryClient';
 
-import promptsService from '@utils/prompts.service';
+import queryClient from '@content/queryClient';
+import promptsService from '@content/services/prompts.service';
 
 export const promptQueryKeys = {
   prompts: ['prompts'],
@@ -39,7 +39,7 @@ export const useUpdatePrompt = () => {
         promptQueryKeys.prompt(variables.id),
         updatedPrompt
       );
-      
+
       queryClient.invalidateQueries({
         queryKey: promptQueryKeys.prompts
       });
@@ -56,7 +56,7 @@ export const useDeletePrompt = () => {
       queryClient.removeQueries({
         queryKey: promptQueryKeys.prompt(deletedId)
       });
-      
+
       // Invalidate prompts list
       queryClient.invalidateQueries({
         queryKey: promptQueryKeys.prompts

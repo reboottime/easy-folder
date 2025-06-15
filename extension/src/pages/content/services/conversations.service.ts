@@ -1,4 +1,4 @@
-import HttpClient from "./http-client";
+import HttpClient from "@utils/http-client";
 
 class ConversationsService {
   private readonly baseUrl: string;
@@ -42,6 +42,6 @@ class ConversationsService {
   };
 }
 
-const conversationsUtil = new ConversationsService("http://localhost:3000/api");
+const conversationsUtil = new ConversationsService('http://localhost:3000');
 
 export default conversationsUtil;

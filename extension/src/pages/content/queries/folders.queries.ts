@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import queryClient from '@src/pages/content/queryClient';
-import foldersService from '@utils/folders.service';
+import queryClient from '@content/queryClient';
+import foldersService from '@content/services/folders.service';
 
 export const folderQueryKeys = {
   folders: ['folders'],
@@ -33,8 +33,8 @@ export const useCreateFolder = () => {
 
 export const useUpdateFolder = () => {
   return useMutation({
-    mutationFn: ({ id, updateFolderDto }: { id: string; updateFolderDto: any }) =>
-      foldersService.update(id, updateFolderDto),
+    mutationFn: ({ id, update }: { id: string; update: IUpdateFolderDto }) =>
+      foldersService.update(id, update),
     onSuccess: (_, variables) => {
       // Invalidate folders list
       queryClient.invalidateQueries({

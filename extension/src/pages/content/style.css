@@ -132,7 +132,7 @@
     @apply bg-background text-foreground;
   }
 
-  [role="dialog"] {
+  [role="dialog"], [role="alertdialog"] {
     color: var(--color-foreground);
   }
 }

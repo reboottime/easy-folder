@@ -9,7 +9,7 @@ import {
     CommandItem,
     CommandList,
 } from "@ui/command";
-import { useGetPrompts } from "@pages/content/queries/prompts.queries";
+import { useGetPrompts } from "@content/queries/prompts.queries";
 
 interface SearchPromptProps {
     onApplyPrompt: (prompt: IPrompt) => void;
@@ -17,14 +17,12 @@ interface SearchPromptProps {
 
 export default function SearchPrompt({ onApplyPrompt }: SearchPromptProps) {
     const [open, setOpen] = useState(false);
-    const [searchValue, setSearchValue] = useState("");
 
     const { data: prompts, isLoading, isFetched, error } = useGetPrompts();
 
     const onPromptSelect = async(p: IPrompt) => {
         try {
             await onApplyPrompt(p);
-            setSearchValue('');
             setOpen(false)
         }
         catch (e) {
@@ -38,20 +36,14 @@ export default function SearchPrompt({ onApplyPrompt }: SearchPromptProps) {
                 <input
                     type="text"
                     placeholder="Search prompts..."
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    onKeyDown={(event) => {
-                        if (event.key === "Enter" && searchValue.trim()) {
-                            setOpen(true);
-                        }
-                    }}
+                    onFocus={(e) => setOpen(true)}
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             </div>
 
             <CommandDialog open={open} onOpenChange={setOpen}>
-                <CommandInput placeholder="Search prompts..." value={searchValue} />
+                <CommandInput placeholder="Search prompts..."  />
                 <CommandList>
                     {isLoading && (
                         <CommandGroup>

@@ -7,7 +7,7 @@ import {
     CommandItem,
     CommandList,
 } from "@ui/command";
-import { useGetConversations } from "@pages/content/queries/conversations.queries";
+import { useGetConversations } from "@content/queries/conversations.queries";
 
 
 interface ConversationsCommandProps {

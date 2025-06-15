@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Search, Plus, MessageSquarePlus } from "lucide-react";
 
-import { useGetFolders } from "@pages/content/queries/folders.queries";
+import { useGetFolders } from "@content/queries/folders.queries";
 import { Button } from "@ui/button";
 import { cn } from "@utils/cn";
 
@@ -10,7 +10,8 @@ import BookmarkConversation from "./BookmarkButton";
 import ConversationsCommand from "./ConversationsCommand";
 import EditConversation from "./EditConversationDialog";
 import FolderCommand from "./FolderCommand";
-import UnBookmarkButton from "./UnbookmarkButton";
+import Folders from "./Folders";
+import UnBookmarkButton from "./UnBookmarkButton";
 import useGetConversation from "./hooks/useGetConversation";
 
 const Conversations: React.FC = () => {
@@ -32,18 +33,14 @@ const Conversations: React.FC = () => {
         {/* Header with Folders title and + button */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium text-gray-900">Conversations</h2>
-          <div className="flex gap-4">
-            {conversation?.conversationId && !conversation?._id && (
-              <>
-                <BookmarkConversation conversation={conversation} />{" "}
-              </>
-            )}
-            {conversation?._id && (
+          <div className="flex gap-1">
+            {conversation && !("_id" in conversation) && <BookmarkConversation conversation={conversation as ICreateConversationDto} />}
+            {conversation && '_id' in conversation && (
               <>
                 <UnBookmarkButton
                   conversationId={conversation.conversationId}
                 />
-                <EditConversation conversation={conversation} />
+                <EditConversation conversation={conversation as IConversation} />
               </>
             )}
             <Button
@@ -83,26 +80,7 @@ const Conversations: React.FC = () => {
             "space-y-1": folders?.length,
           })}
         >
-          {folders
-            ?.sort((a, b) => a.name.localeCompare(b.name))
-            .map((folder) => (
-              <button
-                onClick={setSelectedFolder.bind(null, folder)}
-                className="flex items-center justify-between py-1 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors w-full"
-              >
-                <div className="flex items-center space-x-3">
-                  <div
-                    className="w-8 h-8 rounded-md flex items-center justify-center text-white font-medium"
-                    style={{ backgroundColor: folder.color || "#DBEAFE" }}
-                  >
-                    {folder.icon || "📁"}
-                  </div>
-                  <span className="text-gray-900 font-medium">
-                    {folder.name}
-                  </span>
-                </div>
-              </button>
-            ))}
+          {!!folders?.length && <Folders folders={folders} setSelectedFolder={setSelectedFolder} />}
           <Button
             className="cursor-pointer w-full"
             onClick={setIsAddingFolder.bind(null, true)}
@@ -112,12 +90,10 @@ const Conversations: React.FC = () => {
         </div>
       </div>
       <AddFolderDialog open={isAddingFolder} onOpenChange={setIsAddingFolder} />
-      {
-        <FolderCommand
-          folder={selectedFolder ?? undefined}
-          onClose={setSelectedFolder.bind(null, null)}
-        />
-      }
+      <FolderCommand
+        folder={selectedFolder ?? undefined}
+        onClose={setSelectedFolder.bind(null, null)}
+      />
       <ConversationsCommand
         open={isSearching}
         onOpenChange={setIsSearching}

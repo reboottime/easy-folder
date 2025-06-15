@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import queryClient from '@src/pages/content/queryClient';
-import conversationsService from '@utils/conversations.service';
+import queryClient from '@content/queryClient';
+import conversationsService from '@content/services/conversations.service';
 
 export const conversationQueryKeys = {
   conversations: ['conversations'],

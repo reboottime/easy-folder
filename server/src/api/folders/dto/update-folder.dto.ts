@@ -1,9 +1,15 @@
-import { IsString, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { IsString, MaxLength, MinLength, IsOptional } from 'class-validator';
 
 export class UpdateFolderDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MinLength(1)
   @MaxLength(100)
   name: string;
+
+  @IsString()
+  @IsOptional()
+  @MinLength(1)
+  @MaxLength(100)
+  description: string;
 }

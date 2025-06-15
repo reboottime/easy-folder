@@ -1,4 +1,4 @@
-import HttpClient from "./http-client";
+import HttpClient from "@utils/http-client";
 
 class FoldersService {
     private readonly baseUrl: string;
@@ -26,6 +26,6 @@ class FoldersService {
     };
 }
 
-const folders = new FoldersService('http://localhost:3000/api');
+const folders = new FoldersService('http://localhost:3000');
 
 export default folders;
