@@ -11,22 +11,37 @@ import {
   DialogFooter,
   DialogClose,
 } from "@ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@ui/select";
 import { Button } from "@ui/button";
 import { Input } from "@ui/input";
 import { Textarea } from "@ui/textarea";
-import { Label } from "@ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@ui/form";
 import {
   useCreatePrompt,
   useDeletePrompt,
   useUpdatePrompt,
 } from "@pages/content/queries/prompts.queries";
+import { useGetFolders } from "@src/pages/content/queries/folders.queries";
 
 interface PromptFormData {
   name: string;
   content: string;
+  folderId: null | string;
 }
 
-// Yup validation schema
 const promptSchema = yup.object().shape({
   name: yup
     .string()
@@ -40,7 +55,8 @@ const promptSchema = yup.object().shape({
     .trim()
     .min(1, "Content cannot be empty")
     .max(5000, "Content must be less than 5000 characters"),
-});
+  folderId: yup.string().nullable().optional(),
+}) as yup.ObjectSchema<PromptFormData>;
 
 interface PromptDialogProps {
   open: boolean;
@@ -48,12 +64,13 @@ interface PromptDialogProps {
   prompt?: IPrompt | null; // If provided = edit mode, if not = create mode
 }
 
- const PromptDialog: React.FC<PromptDialogProps> = ({
+const PromptDialog: React.FC<PromptDialogProps> = ({
   open,
   onOpenChange,
   prompt,
 }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const { data: folders } = useGetFolders();
 
   const createPrompt = useCreatePrompt();
   const updatePrompt = useUpdatePrompt();
@@ -64,18 +81,13 @@ interface PromptDialogProps {
 
   const isEditMode = !!prompt;
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isValid },
-    clearErrors,
-  } = useForm<PromptFormData>({
+  const form = useForm<PromptFormData>({
     resolver: yupResolver(promptSchema),
     mode: "onChange",
     defaultValues: {
       name: "",
       content: "",
+      folderId: null,
     },
   });
 
@@ -83,37 +95,42 @@ interface PromptDialogProps {
   useEffect(() => {
     if (open) {
       if (isEditMode && prompt) {
-        reset({
+        form.reset({
           name: prompt.name,
           content: prompt.content,
+          folderId: prompt.folderId || null,
         });
       } else {
-        reset({
+        form.reset({
           name: "",
           content: "",
+          folderId: null,
         });
       }
-      // Clear any existing errors when dialog opens
-      clearErrors();
     }
     setShowDeleteConfirm(false);
-  }, [open, isEditMode, prompt, reset, clearErrors]);
+  }, [open, isEditMode, prompt, form]);
 
   const onSubmit = async (data: PromptFormData) => {
     try {
+      const folderId =
+        data.folderId === "nil" ? undefined : (data.folderId ?? undefined);
+
       if (isEditMode && prompt) {
         const updateData: IUpdatePromptDto = {
           name: data.name.trim(),
           content: data.content.trim(),
+          folderId,
         };
         await updatePrompt.mutateAsync({
           id: prompt._id!,
-          updatePromptDto: updateData,
+          update: updateData,
         });
       } else {
         const createData: ICreatePromptDto = {
           name: data.name.trim(),
           content: data.content.trim(),
+          folderId,
         };
         await createPrompt.mutateAsync(createData);
       }
@@ -169,72 +186,111 @@ interface PromptDialogProps {
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="prompt-name">Name</Label>
-              <Input
-                id="prompt-name"
-                {...register("name")}
-                placeholder="Enter prompt name..."
-                disabled={isLoading}
-                className={
-                  errors.name ? "border-red-500 focus-visible:ring-red-500" : ""
-                }
-              />
-              {errors.name && (
-                <p className="text-sm text-red-600">{errors.name.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="prompt-content">Content</Label>
-              <Textarea
-                id="prompt-content"
-                {...register("content")}
-                placeholder="Enter your prompt content..."
-                rows={6}
-                disabled={isLoading}
-                className={`resize-none ${errors.content ? "border-red-500 focus-visible:ring-red-500" : ""}`}
-              />
-              {errors.content && (
-                <p className="text-sm text-red-600">{errors.content.message}</p>
-              )}
-            </div>
-
-            <DialogFooter className="flex justify-between">
-              <div>
-                {isEditMode && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowDeleteConfirm(true)}
-                    disabled={isLoading}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4 mr-1" />
-                    Delete
-                  </Button>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter prompt name..."
+                        disabled={isLoading}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
-              <div className="flex gap-2">
-                <DialogClose asChild>
-                  <Button variant="outline" disabled={isLoading}>
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button type="submit" disabled={!isValid || isLoading}>
-                  {isLoading
-                    ? isEditMode
-                      ? "Saving..."
-                      : "Adding..."
-                    : isEditMode
-                      ? "Save Changes"
-                      : "Add Prompt"}
-                </Button>
-              </div>
-            </DialogFooter>
-          </form>
+              />
+
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Content</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Enter your prompt content..."
+                        rows={6}
+                        disabled={isLoading}
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="folderId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Folder</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value || "nil"}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a folder" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="nil">No folder</SelectItem>
+                        {folders?.map((folder) => (
+                          <SelectItem key={folder._id} value={folder._id}>
+                            {folder.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <p className="flex justify-between w-full">
+                  {isEditMode && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowDeleteConfirm(true)}
+                      disabled={isLoading}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
+                    </Button>
+                  )}
+                  <div className="flex gap-2">
+                    <DialogClose asChild>
+                      <Button variant="outline" disabled={isLoading}>
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      type="submit"
+                      disabled={!form.formState.isValid || isLoading}
+                    >
+                      {isLoading
+                        ? isEditMode
+                          ? "Saving..."
+                          : "Adding..."
+                        : isEditMode
+                          ? "Save Changes"
+                          : "Add Prompt"}
+                    </Button>
+                  </div>
+                </p>
+              </DialogFooter>
+            </form>
+          </Form>
         )}
       </DialogContent>
     </Dialog>

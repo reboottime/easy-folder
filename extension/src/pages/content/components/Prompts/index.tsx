@@ -51,39 +51,32 @@ const SavedPrompts = () => {
             {prompts?.map((prompt) => (
               <div
                 key={prompt._id}
-                className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors w-full border border-gray-100"
+                className="flex items-center justify-between gap-4 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors w-full border border-gray-100"
               >
-                <div className="flex items-center space-x-3 flex-1">
-                  <Button
-                    className="cursor-pointer"
-                    size="icon"
-                    variant="outline"
-                    onClick={applyPrompt.bind(null, prompt)}
-                  >
-                    <FileText className="h-4 w-4 text-blue-600" />
-                  </Button>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-gray-900 font-medium block truncate">
-                      {prompt.name}
-                    </span>
-                    <span className="text-gray-500 text-sm block truncate">
-                      {prompt.content}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex gap-1">
-                  <Button
-                    onClick={() => setSelectedPrompt(prompt)}
-                    variant="ghost"
-                    size="sm"
-                    aria-label="Edit Prompt"
-                  >
-                    <Edit3 className="h-3 w-3" />
-                  </Button>
-                  <Button variant="ghost" size="sm" aria-label="Use Prompt">
-                    Use
-                  </Button>
-                </div>
+                <Button
+                  className="cursor-pointer"
+                  size="icon"
+                  variant="outline"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    applyPrompt(prompt);
+                  }}
+                >
+                  <FileText className="h-4 w-4 text-blue-600" />
+                </Button>
+                <button className="flex-1 min-w-0 cursor-pointer outline-0 text-left"
+                  onClick={(e) => {
+                    setShowEditDialog(true);
+                    setSelectedPrompt(prompt);
+                  }}
+                >
+                   <p className="text-gray-600 text-base block truncate">
+                    {prompt.name}
+                  </p>
+                  <p className="text-gray-400 text-sm block truncate">
+                    {prompt.content.slice(0,30)}...
+                  </p>
+                </button>
               </div>
             ))}
           </div>
