@@ -16,8 +16,8 @@ declare interface IFolder {
   _id: string;
   name: string;
   description?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: string;
+  updatedAt: string;
   icon?: string;
   color?: string;
 }
@@ -39,8 +39,8 @@ declare interface IConversation {
   title: string;
   folderId?: string | null;
   note?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 declare interface ICreateConversationDto {
@@ -66,20 +66,20 @@ declare interface IPrompt {
   name: string;
   content: string;
   folderId?: string | null;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 declare interface ICreatePromptDto {
   name: string;
   content: string;
-  folderId?: string;
+  folderId: string | null;
 }
 
 declare interface IUpdatePromptDto {
   name?: string;
   content?: string;
-  folderId?: string;
+  folderId: string | null;
 }
 
 declare interface IPromptWithFolder extends Omit<IPrompt, 'folderId'> {

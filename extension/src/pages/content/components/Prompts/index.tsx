@@ -1,16 +1,17 @@
-import React, { useState } from "react";
-import { Plus, FileText, Edit3 } from "lucide-react";
-
-import PromptDialog from "./components/PromptDialog";
-import applyPrompt from "./utils/applyPrompt";
+import { useState } from "react";
+import { Plus, FileText } from "lucide-react";
 
 import { Button } from "@ui/button";
-import { cn } from "@utils/cn";
 import { ScrollArea } from "@ui/scrollarea";
+import { cn } from "@utils/cn";
+
 import { useGetPrompts } from "@pages/content/queries/prompts.queries";
+
+import applyPrompt from "./utils/applyPrompt";
+import PromptDialog from "./components/PromptDialog";
 import SearchPrompt from "./components/SearchPrompts";
 
-const SavedPrompts = () => {
+export default function Prompts() {
   const { data: prompts, isLoading, error } = useGetPrompts();
   const [selectedPrompt, setSelectedPrompt] = useState<IPrompt | null>(null);
 
@@ -48,10 +49,12 @@ const SavedPrompts = () => {
               "space-y-1": prompts?.length,
             })}
           >
-            {prompts?.map((prompt) => (
+            {prompts && [...prompts].sort((a, b) =>
+              new Date(b.updatedAt!).getTime() - new Date(a.updatedAt!).getTime()
+            ).map((prompt) => (
               <div
                 key={prompt._id}
-                className="flex items-center justify-between gap-4 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors w-full border border-gray-100"
+                className="flex items-center justify-between gap-4 px-1 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors w-full"
               >
                 <Button
                   className="cursor-pointer"
@@ -70,11 +73,11 @@ const SavedPrompts = () => {
                     setSelectedPrompt(prompt);
                   }}
                 >
-                   <p className="text-gray-600 text-base block truncate">
+                  <p className="text-gray-600 text-base block truncate">
                     {prompt.name}
                   </p>
                   <p className="text-gray-400 text-sm block truncate">
-                    {prompt.content.slice(0,30)}...
+                    {prompt.content.slice(0, 30)}...
                   </p>
                 </button>
               </div>
@@ -104,5 +107,3 @@ const SavedPrompts = () => {
     </div>
   );
 };
-
-export default SavedPrompts;

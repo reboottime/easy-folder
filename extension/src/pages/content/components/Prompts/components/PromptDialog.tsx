@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { Trash2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+
+import { Button } from "@ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,16 +14,6 @@ import {
   DialogClose,
 } from "@ui/dialog";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@ui/select";
-import { Button } from "@ui/button";
-import { Input } from "@ui/input";
-import { Textarea } from "@ui/textarea";
-import {
   Form,
   FormControl,
   FormField,
@@ -29,6 +21,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@ui/form";
+import { Input } from "@ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@ui/select";
+import { ScrollArea } from "@ui/scrollarea";
+import { Textarea } from "@ui/textarea";
+
 import {
   useCreatePrompt,
   useDeletePrompt,
@@ -37,18 +40,12 @@ import {
 import { useGetFolders } from "@src/pages/content/queries/folders.queries";
 
 interface PromptFormData {
-  name: string;
   content: string;
   folderId: null | string;
+  name: string;
 }
 
 const promptSchema = yup.object().shape({
-  name: yup
-    .string()
-    .required("Name is required")
-    .trim()
-    .min(1, "Name cannot be empty")
-    .max(100, "Name must be less than 100 characters"),
   content: yup
     .string()
     .required("Content is required")
@@ -56,11 +53,17 @@ const promptSchema = yup.object().shape({
     .min(1, "Content cannot be empty")
     .max(5000, "Content must be less than 5000 characters"),
   folderId: yup.string().nullable().optional(),
+  name: yup
+    .string()
+    .required("Name is required")
+    .trim()
+    .min(1, "Name cannot be empty")
+    .max(100, "Name must be less than 100 characters"),
 }) as yup.ObjectSchema<PromptFormData>;
 
 interface PromptDialogProps {
-  open: boolean;
   onOpenChange: (newState: boolean) => void;
+  open: boolean;
   prompt?: IPrompt | null; // If provided = edit mode, if not = create mode
 }
 
@@ -113,8 +116,7 @@ const PromptDialog: React.FC<PromptDialogProps> = ({
 
   const onSubmit = async (data: PromptFormData) => {
     try {
-      const folderId =
-        data.folderId === "nil" ? undefined : (data.folderId ?? undefined);
+      const folderId =  data.folderId === "nil" ? null : (data.folderId ?? null);
 
       if (isEditMode && prompt) {
         const updateData: IUpdatePromptDto = {
@@ -205,26 +207,24 @@ const PromptDialog: React.FC<PromptDialogProps> = ({
                   </FormItem>
                 )}
               />
-
-              <FormField
-                control={form.control}
-                name="content"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Content</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Enter your prompt content..."
-                        rows={6}
-                        disabled={isLoading}
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                  <FormField
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Content</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Enter your prompt content..."
+                            disabled={isLoading}
+                            className="resize-none min-h-[120px] max-h-[300px] overflow-y-auto"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
               <FormField
                 control={form.control}
                 name="folderId"
@@ -268,7 +268,7 @@ const PromptDialog: React.FC<PromptDialogProps> = ({
                       Delete
                     </Button>
                   )}
-                  <div className="flex gap-2">
+                  <div className="flex flex-1 justify-end gap-2">
                     <DialogClose asChild>
                       <Button variant="outline" disabled={isLoading}>
                         Cancel
