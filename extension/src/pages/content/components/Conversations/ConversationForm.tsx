@@ -3,14 +3,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { Button } from "@ui/button";
-import { Textarea } from "@ui/textarea";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@ui/select";
 import {
     Form,
     FormControl,
@@ -19,6 +11,14 @@ import {
     FormLabel,
     FormMessage,
 } from "@ui/form";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@ui/select";
+import { Textarea } from "@ui/textarea";
 
 import {
     useCreateConversation,
@@ -27,25 +27,24 @@ import {
 import { useGetFolders } from "@pages/content/queries/folders.queries";
 
 type ConversationFormData = {
-    title: string;
-    note?: string;
     folderId: string | null;
+    note?: string;
+    title: string;
 };
 
 const conversationSchema = yup.object().shape({
-    title: yup.string().required("Title is required"),
-    note: yup.string().optional(),
     folderId: yup.string().nullable().optional(),
+    note: yup.string().optional(),
+    title: yup.string().required("Title is required"),
 }) as yup.ObjectSchema<ConversationFormData>;
-
 interface ConversationFormProps {
     conversation: IConversation | ICreateConversationDto;
-    onUpdated: CallableFunction;
+    onSubmited: CallableFunction;
 }
 
 export function ConversationForm({
     conversation,
-    onUpdated,
+    onSubmited,
 }: ConversationFormProps) {
     const { data: folders = [] } = useGetFolders();
 
@@ -82,7 +81,7 @@ export function ConversationForm({
         } catch (e) {
             console.error(e);
         } finally {
-            onUpdated();
+            onSubmited();
         }
     };
 

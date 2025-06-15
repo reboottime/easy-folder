@@ -11,23 +11,17 @@ import {
   DialogDescription,
 } from "@ui/dialog";
 import { cn } from "@utils/cn";
+
 import { ConversationForm } from "./ConversationForm";
-import useGetConversation from "./hooks/useGetConversation";
 
 interface BookmarkConversationProps {
-  conversationId: string;
-  title: string;
+ conversation: IConversation
 }
 
 export default function EditConversation({
-  conversationId,
-  title,
+    conversation
 }: BookmarkConversationProps) {
   const [open, setOpen] = useState(false);
-  const { data: conversation } = useGetConversation(
-    conversationId,
-    title,
-  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -44,7 +38,7 @@ export default function EditConversation({
         {conversation && (
           <ConversationForm
             conversation={conversation}
-            onUpdated={setOpen.bind(null, false)}
+            onSubmited={setOpen.bind(null, false)}
           />
         )}
       </DialogContent>
