@@ -1,5 +1,7 @@
 const axios = require('axios');
 
+require('dotenv').config();
+
 // Configuration
 const HEALTH_ENDPOINT = process.env.HEALTH_ENDPOINT;
 const PING_INTERVAL = process.env.PING_INTERVAL;

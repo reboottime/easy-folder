@@ -1,6 +1,6 @@
 module.exports = {
     apps: [{
-        name: 'render-pinger',
+        name: 'render-deepseeker-pinger',
         script: 'index.js',
         instances: 1,
         autorestart: true,
