@@ -38,7 +38,6 @@ class ConversationsService {
   };
 
   create = async (conversation: ICreateConversationDto): Promise<IConversation> => {
-    console.info(conversation);
     return this.httpClient.post(``, conversation);
   };
 }

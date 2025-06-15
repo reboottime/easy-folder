@@ -18,7 +18,6 @@ export class ConversationsService {
   ) {}
 
   async create(createConDto: CreateConversationDto): Promise<Conversation> {
-    // Check if folder name already exists
     const existing = await this.conversationModel
       .findOne({ conversationId: createConDto.conversationId })
       .exec();
@@ -48,11 +47,7 @@ export class ConversationsService {
       query.bookmarked = params.bookmarked;
     }
 
-    return this.conversationModel
-      .find(query)
-      .populate('folderId', 'name')
-      .sort({ lastAccessed: -1 })
-      .exec();
+    return this.conversationModel.find(query).exec();
   }
 
   async update(
@@ -67,7 +62,6 @@ export class ConversationsService {
         },
         { new: true, upsert: true },
       )
-      .populate('folderId', 'name')
       .exec();
 
     return updatedConversation;

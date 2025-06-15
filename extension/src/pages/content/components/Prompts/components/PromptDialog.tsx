@@ -48,7 +48,7 @@ interface PromptDialogProps {
   prompt?: IPrompt | null; // If provided = edit mode, if not = create mode
 }
 
-export const PromptDialog: React.FC<PromptDialogProps> = ({
+ const PromptDialog: React.FC<PromptDialogProps> = ({
   open,
   onOpenChange,
   prompt,
@@ -240,3 +240,5 @@ export const PromptDialog: React.FC<PromptDialogProps> = ({
     </Dialog>
   );
 };
+
+export default PromptDialog;
