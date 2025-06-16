@@ -6,7 +6,7 @@ export type FolderDocument = Folder & Document;
 
 @Schema({
   timestamps: true,
-  collection: 'folders',
+  collection: 'folders'
 })
 export class Folder {
   @Prop({
